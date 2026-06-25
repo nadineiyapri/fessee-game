@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Est-ce que je peux te taper les fesses ?</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fdf6f0, #f5ebe4);
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+            padding: 16px;
+        }
+        .container {
+            background: rgba(255, 251, 248, 0.92);
+            backdrop-filter: blur(20px);
+            padding: 3rem 2.8rem 2.5rem;
+            border-radius: 44px;
+            box-shadow: 0 30px 80px rgba(120,80,60,0.12);
+            text-align: center;
+            max-width: 640px;
+            width: 100%;
+        }
+        .emoji-big { font-size: 6rem; display: block; margin-bottom: 0.1rem; animation: flottement 4s ease-in-out infinite; }
+        @keyframes flottement { 0%,100%{transform:translateY(0px) rotate(-2deg)} 50%{transform:translateY(-8px) rotate(2deg)} }
+        h1 { font-size: 2.3rem; font-weight: 700; color: #4a3228; margin-bottom: 0.2rem; }
+        .sous-titre { font-size: 1rem; color: #b09588; margin-bottom: 2rem; }
+        .btn-group { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        button {
+            border: none;
+            padding: 1rem 2.8rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+        }
+        #btnOui {
+            background: linear-gradient(135deg, #ff6b8a, #ee5a7a);
+            color: #fff;
+            box-shadow: 0 8px 28px rgba(238,90,122,0.35);
+        }
+        #btnOui:hover { transform: translateY(-2px) scale(1.03); }
+        #btnNon {
+            background: linear-gradient(135deg, #cdd4d9, #bcc5cc);
+            color: #fff;
+            box-shadow: 0 8px 28px rgba(160,175,185,0.3);
+            position: relative;
+            transition: 0.08s linear;
+        }
+        #btnNon:hover { transform: scale(0.95); }
+        .message-cache {
+            margin-top: 2rem;
+            padding: 1.2rem 1.8rem;
+            border-radius: 36px;
+            display: none;
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #4a3228;
+            background: linear-gradient(135deg, #fff0ed, #fce4e0);
+            animation: apparition 0.6s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .message-cache.show { display: block; }
+        @keyframes apparition { 0%{opacity:0;transform:scale(0.92) translateY(12px)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+        footer { margin-top: 2rem; color: #cbb8ae; font-size: 0.8rem; letter-spacing: 0.8px; }
+        #btnNon.desactive { opacity: 0.4; cursor: default; pointer-events: none; }
+        @media (max-width: 500px) {
+            .container { padding: 2rem 1.5rem; }
+            h1 { font-size: 1.8rem; }
+            .emoji-big { font-size: 4.5rem; }
+            button { font-size: 1.3rem; padding: 0.85rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <span class="emoji-big">🍑</span>
+    <h1>Est-ce que je peux te taper les fesses ?</h1>
+    <div class="sous-titre">— Une question à ne pas prendre à la légère —</div>
+    <div class="btn-group">
+        <button id="btnOui">💖 Oui</button>
+        <button id="btnNon">🙅‍♀️ Non</button>
+    </div>
+    <div id="messageFinal" class="message-cache">🍑 Alors là, tu as choisi la bonne réponse ! 😏🔥</div>
+    <footer>✧ le bouton "Non" est un peu… fuyant ✧</footer>
+</div>
+<script>
+    const btnOui = document.getElementById('btnOui');
+    const btnNon = document.getElementById('btnNon');
+    const message = document.getElementById('messageFinal');
+
+    function getLimites() {
+        const rect = btnNon.getBoundingClientRect();
+        return {
+            minX: 20,
+            maxX: window.innerWidth - rect.width - 20,
+            minY: 20,
+            maxY: window.innerHeight - rect.height - 20
+        };
+    }
+
+    function deplacerBtnNon() {
+        const limites = getLimites();
+        if (limites.maxX < limites.minX || limites.maxY < limites.minY) {
+            btnNon.style.position = 'fixed';
+            btnNon.style.left = '50%';
+            btnNon.style.top = '50%';
+            btnNon.style.transform = 'translate(-50%, -50%)';
+            return;
+        }
+        const randomX = Math.floor(Math.random() * (limites.maxX - limites.minX + 1)) + limites.minX;
+        const randomY = Math.floor(Math.random() * (limites.maxY - limites.minY + 1)) + limites.minY;
+        btnNon.style.position = 'fixed';
+        btnNon.style.left = randomX + 'px';
+        btnNon.style.top = randomY + 'px';
+        btnNon.style.transform = 'none';
+        btnNon.style.zIndex = '9999';
+    }
+
+    function remettreBtnNonDansLeFlux() {
+        btnNon.style.position = 'relative';
+        btnNon.style.left = 'auto';
+        btnNon.style.top = 'auto';
+        btnNon.style.transform = 'none';
+        btnNon.style.zIndex = 'auto';
+    }
+
+    btnNon.addEventListener('mouseenter', function() {
+        if (!btnNon.classList.contains('desactive')) deplacerBtnNon();
+    });
+    btnNon.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!btnNon.classList.contains('desactive')) deplacerBtnNon();
+    });
+    btnOui.addEventListener('click', function() {
+        message.classList.add('show');
+        remettreBtnNonDansLeFlux();
+        btnNon.classList.add('desactive');
+    });
+    window.addEventListener('resize', function() {
+        if (btnNon.style.position === 'fixed' && !btnNon.classList.contains('desactive')) {
+            const limites = getLimites();
+            let newX = parseInt(btnNon.style.left, 10);
+            let newY = parseInt(btnNon.style.top, 10);
+            if (isNaN(newX)) newX = limites.minX;
+            if (isNaN(newY)) newY = limites.minY;
+            newX = Math.max(limites.minX, Math.min(limites.maxX, newX));
+            newY = Math.max(limites.minY, Math.min(limites.maxY, newY));
+            btnNon.style.left = newX + 'px';
+            btnNon.style.top = newY + 'px';
+        }
+    });
+    remettreBtnNonDansLeFlux();
+</script>
+</body>
+</html>
